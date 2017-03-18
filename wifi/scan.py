@@ -30,12 +30,13 @@ class Cell(object):
         return 'Cell(ssid={ssid})'.format(**vars(self))
 
     @classmethod
-    def all(cls, interface):
+    def all(cls, interface, sudo=False):
         """
         Returns a list of all cells extracted from the output of iwlist.
         """
+        pre = {True: ['sudo'], False: []}[sudo]
         try:
-            iwlist_scan = subprocess.check_output(['/sbin/iwlist', interface, 'scan'],
+            iwlist_scan = subprocess.check_output(pre + ['/sbin/iwlist', interface, 'scan'],
                                                   stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             raise InterfaceError(e.output.strip())
