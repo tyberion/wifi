@@ -164,13 +164,13 @@ class Scheme(object):
 
         return [self.interface + '=' + self.iface] + args
 
-    def activate(self):
+    def activate(self, sudo=False):
         """
         Connects to the network as configured in this scheme.
         """
-
-        subprocess.check_output(['/sbin/ifdown', self.interface], stderr=subprocess.STDOUT)
-        ifup_output = subprocess.check_output(['/sbin/ifup'] + self.as_args(), stderr=subprocess.STDOUT)
+        pre = {True: ['sudo'], False: []}
+        subprocess.check_output(pre + ['/sbin/ifdown', self.interface], stderr=subprocess.STDOUT)
+        ifup_output = subprocess.check_output(pre + ['/sbin/ifup'] + self.as_args(), stderr=subprocess.STDOUT)
         ifup_output = ifup_output.decode('utf-8')
 
         return self.parse_ifup_output(ifup_output)
