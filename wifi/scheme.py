@@ -168,7 +168,7 @@ class Scheme(object):
         """
         Connects to the network as configured in this scheme.
         """
-        pre = {True: ['sudo'], False: []}
+        pre = {True: ['sudo'], False: []}[sudo]
         subprocess.check_output(pre + ['/sbin/ifdown', self.interface], stderr=subprocess.STDOUT)
         ifup_output = subprocess.check_output(pre + ['/sbin/ifup'] + self.as_args(), stderr=subprocess.STDOUT)
         ifup_output = ifup_output.decode('utf-8')
